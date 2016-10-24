@@ -19,6 +19,9 @@ func NewSchemaAddHandler(core *core.Core) *SchemaAddHandler {
 func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	schemaname := vars["schemaname"]
+
+	//collection := h.core.GetCollection(core.SchemaCollection)
+
 	response.Json(
 		resp,
 		struct {
