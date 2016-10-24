@@ -5,13 +5,15 @@ import (
 	"net/http"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/Enapiuz/SchemaStorage/core"
 )
 
 type SchemaAddHandler struct {
+	core *core.Core
 }
 
-func NewSchemaAddHandler() *SchemaAddHandler {
-	return &SchemaAddHandler{}
+func NewSchemaAddHandler(core *core.Core) *SchemaAddHandler {
+	return &SchemaAddHandler{core: core}
 }
 
 func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
