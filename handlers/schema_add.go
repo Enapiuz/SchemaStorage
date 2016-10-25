@@ -47,7 +47,7 @@ func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request
 	if err != nil {
 		response.Json(
 			resp,
-			core.Respomse{Ok: false, Info: "Can't save schema"},
+			core.Respomse{Ok: false, Info: "Can't add schema, it's already exists"},
 			http.StatusInternalServerError)
 		return
 	}

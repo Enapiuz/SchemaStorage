@@ -31,5 +31,16 @@ func initializeCore() *core.Core {
 	if err != nil {
 		panic(err)
 	}
-	return core.NewCore(mongo)
+
+	newCore := core.NewCore(mongo)
+	index := mgo.Index{
+		Key: []string{"name"},
+		Unique: true,
+		DropDups: true,
+		Background: true,
+		Sparse: true,
+	}
+	newCore.GetCollection(core.SchemaCollection).EnsureIndex(index)
+
+	return newCore
 }
