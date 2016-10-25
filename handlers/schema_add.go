@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"github.com/Enapiuz/SchemaStorage/helpers/response"
-	"net/http"
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/Enapiuz/SchemaStorage/core"
+	"github.com/Enapiuz/SchemaStorage/helpers/response"
+	"github.com/gorilla/mux"
+	"io/ioutil"
+	"net/http"
 )
 
 type SchemaAddHandler struct {
@@ -18,15 +19,41 @@ func NewSchemaAddHandler(core *core.Core) *SchemaAddHandler {
 
 func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	schemaname := vars["schemaname"]
+	schemaName := vars["schemaname"]
+	schemaString, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
 
-	//collection := h.core.GetCollection(core.SchemaCollection)
+	if err != nil {
+		response.Json(
+			resp,
+			core.Respomse{Ok: false, Info: "Can't read body"},
+			http.StatusNotFound)
+		return
+	}
+
+	if schemaString == "" {
+		response.Json(
+			resp,
+			core.Respomse{Ok: false, Info: "Blank request body"},
+			http.StatusBadRequest)
+		return
+	}
+
+	schemaData := core.NewSchema(schemaName, schemaString)
+
+	collection := h.core.GetCollection(core.SchemaCollection)
+	err = collection.Insert(schemaData)
+
+	if err != nil {
+		response.Json(
+			resp,
+			core.Respomse{Ok: false, Info: "Can't save schema"},
+			http.StatusInternalServerError)
+		return
+	}
 
 	response.Json(
 		resp,
-		struct {
-			Ok   bool
-			Info string
-		}{Ok: true, Info: fmt.Sprintf("Will add your schema `%s` to storage", schemaname)},
+		core.Respomse{Ok: true, Info: fmt.Sprintf("Schema %s was added", schemaName)},
 		http.StatusOK)
 }

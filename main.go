@@ -1,13 +1,13 @@
 package main
 
 import (
-	"net/http"
-	"log"
 	"fmt"
+	"github.com/Enapiuz/SchemaStorage/core"
 	"github.com/Enapiuz/SchemaStorage/handlers"
 	"github.com/gorilla/mux"
-	"github.com/Enapiuz/SchemaStorage/core"
 	"gopkg.in/mgo.v2"
+	"log"
+	"net/http"
 )
 
 func main() {

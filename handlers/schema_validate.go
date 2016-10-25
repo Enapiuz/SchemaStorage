@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"github.com/Enapiuz/SchemaStorage/helpers/response"
-	"net/http"
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/Enapiuz/SchemaStorage/core"
+	"github.com/Enapiuz/SchemaStorage/helpers/response"
+	"github.com/gorilla/mux"
+	"net/http"
 )
 
 type SchemaValidateHandler struct {
