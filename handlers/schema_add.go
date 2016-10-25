@@ -31,7 +31,7 @@ func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request
 		return
 	}
 
-	if schemaString == "" {
+	if string(schemaString) == "" {
 		response.Json(
 			resp,
 			core.Respomse{Ok: false, Info: "Blank request body"},
@@ -39,7 +39,7 @@ func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request
 		return
 	}
 
-	schemaData := core.NewSchema(schemaName, schemaString)
+	schemaData := core.NewSchema(schemaName, string(schemaString))
 
 	collection := h.core.GetCollection(core.SchemaCollection)
 	err = collection.Insert(schemaData)
