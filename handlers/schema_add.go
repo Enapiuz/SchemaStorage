@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 type SchemaAddHandler struct {
@@ -19,7 +20,15 @@ func NewSchemaAddHandler(core *core.Core) *SchemaAddHandler {
 
 func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	schemaName := vars["schemaname"]
+	schemaName := strings.TrimSpace(vars["schemaname"])
+	if schemaName == "" {
+		response.Json(
+			resp,
+			core.Respomse{Ok: false, Info: "Blank schema name"},
+			http.StatusBadRequest)
+		return
+	}
+
 	schemaString, err := ioutil.ReadAll(req.Body)
 	defer req.Body.Close()
 
@@ -27,7 +36,7 @@ func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request
 		response.Json(
 			resp,
 			core.Respomse{Ok: false, Info: "Can't read body"},
-			http.StatusNotFound)
+			http.StatusBadRequest)
 		return
 	}
 
@@ -54,6 +63,6 @@ func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request
 
 	response.Json(
 		resp,
-		core.Respomse{Ok: true, Info: fmt.Sprintf("Schema %s was added", schemaName)},
+		core.Respomse{Ok: true, Info: fmt.Sprintf("Schema '%s' was added", schemaName)},
 		http.StatusOK)
 }

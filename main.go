@@ -34,13 +34,17 @@ func initializeCore() *core.Core {
 
 	newCore := core.NewCore(mongo)
 	index := mgo.Index{
-		Key: []string{"name"},
-		Unique: true,
-		DropDups: true,
+		Key:        []string{"name"},
+		Unique:     true,
+		DropDups:   true,
 		Background: true,
-		Sparse: true,
+		Sparse:     true,
 	}
-	newCore.GetCollection(core.SchemaCollection).EnsureIndex(index)
+	err = newCore.GetCollection(core.SchemaCollection).EnsureIndex(index)
+
+	if err != nil {
+		panic(fmt.Sprintf("Can't create index on collection %s", core.SchemaCollection))
+	}
 
 	return newCore
 }
