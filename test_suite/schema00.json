@@ -1,0 +1,12 @@
+{
+  "title": "Test Schema",
+  "type": "object",
+  "properties": {
+    "allo": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "allo"
+  ]
+}

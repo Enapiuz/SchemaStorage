@@ -5,7 +5,6 @@ import (
 	"github.com/Enapiuz/SchemaStorage/core"
 	"github.com/Enapiuz/SchemaStorage/handlers"
 	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2"
 	"log"
 	"net/http"
 )
@@ -14,7 +13,7 @@ func main() {
 	host := "127.0.0.1"
 	port := 4298
 
-	server := initializeCore()
+	server := core.InitializeCore()
 
 	router := mux.NewRouter()
 
@@ -24,27 +23,4 @@ func main() {
 
 	log.Println(fmt.Sprintf("Starting at %v:%d", host, port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%v:%d", host, port), router))
-}
-
-func initializeCore() *core.Core {
-	mongo, err := mgo.Dial("localhost:32771")
-	if err != nil {
-		panic(err)
-	}
-
-	newCore := core.NewCore(mongo)
-	index := mgo.Index{
-		Key:        []string{"name"},
-		Unique:     true,
-		DropDups:   true,
-		Background: true,
-		Sparse:     true,
-	}
-	err = newCore.GetCollection(core.SchemaCollection).EnsureIndex(index)
-
-	if err != nil {
-		panic(fmt.Sprintf("Can't create index on collection %s", core.SchemaCollection))
-	}
-
-	return newCore
 }

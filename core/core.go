@@ -4,7 +4,7 @@ import "gopkg.in/mgo.v2"
 
 const (
 	SchemaCollection = "schemes"
-	SchemaStorage = "schema_storage"
+	SchemaStorage    = "schema_storage"
 )
 
 type Core struct {
