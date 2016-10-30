@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Enapiuz/SchemaStorage/core"
 	"github.com/Enapiuz/SchemaStorage/helpers/response"
+	"github.com/Enapiuz/SchemaStorage/validators"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
@@ -45,6 +46,15 @@ func (h *SchemaAddHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request
 			resp,
 			core.Respomse{Ok: false, Info: "Blank request body"},
 			http.StatusBadRequest)
+		return
+	}
+
+	err = validators.ValidateBytes(&schemaString)
+	if err != nil {
+		response.Json(
+			resp,
+			core.Respomse{Ok: false, Info: "Invalid schema"},
+			http.StatusInternalServerError)
 		return
 	}
 
