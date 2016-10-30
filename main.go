@@ -17,9 +17,10 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.Handle("/schema/add/{schemaname}", handlers.NewSchemaAddHandler(server)).Methods("POST")
-	router.Handle("/schema/validate/{schemaname}", handlers.NewSchemaValidateHandler(server)).Methods("POST")
-	router.Handle("/schema/remove/{schemaname}", handlers.NewSchemaRemoveHandler(server)).Methods("POST")
+	router.Handle("/add/{schemaname}", handlers.NewSchemaAddHandler(server)).Methods("POST")
+	router.Handle("/update/{schemaname}", handlers.NewSchemaUpdateHandler(server)).Methods("POST")
+	router.Handle("/remove/{schemaname}", handlers.NewSchemaRemoveHandler(server)).Methods("POST")
+	router.Handle("/validate/{schemaname}", handlers.NewSchemaValidateHandler(server)).Methods("POST")
 
 	log.Println(fmt.Sprintf("Starting at %v:%d", host, port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%v:%d", host, port), router))
