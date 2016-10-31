@@ -1,6 +1,8 @@
 package core
 
-import "gopkg.in/mgo.v2"
+import (
+	"github.com/Enapiuz/SchemaStorage/repository"
+)
 
 const (
 	SchemaCollection = "schemes"
@@ -8,18 +10,10 @@ const (
 )
 
 type Core struct {
-	Mongo *mgo.Session
+	Repo *repository.Repository
 }
 
-func NewCore(mongo *mgo.Session) *Core {
-	core := Core{Mongo: mongo}
+func NewCore(repo *repository.Repository) *Core {
+	core := Core{Repo: repo}
 	return &core
-}
-
-func (c *Core) GetDB() *mgo.Database {
-	return c.Mongo.DB(SchemaStorage)
-}
-
-func (c *Core) GetCollection(Name string) *mgo.Collection {
-	return c.GetDB().C(Name)
 }

@@ -14,7 +14,6 @@ func main() {
 	port := 4298
 
 	server := core.InitializeCore()
-
 	router := mux.NewRouter()
 
 	router.Handle("/add/{schemaname}", handlers.NewSchemaAddHandler(server)).Methods("POST")

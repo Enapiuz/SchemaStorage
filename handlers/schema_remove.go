@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/Enapiuz/SchemaStorage/core"
 	"github.com/Enapiuz/SchemaStorage/helpers/response"
+	"github.com/Enapiuz/SchemaStorage/http_models"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -22,25 +22,19 @@ func (h *SchemaRemoveHandler) ServeHTTP(resp http.ResponseWriter, req *http.Requ
 	if schemaName == "" {
 		response.Json(
 			resp,
-			core.Respomse{Ok: false, Info: "Blank schema name"},
+			http_models.NewErrorResponseBody(http.StatusBadRequest, "Blank schema name"),
 			http.StatusBadRequest)
 		return
 	}
 
-	err := h.core.GetCollection(core.SchemaCollection).Remove(struct {
-		Name string
-	}{Name: schemaName})
-
+	err := h.core.Repo.DeleteSchema(schemaName)
 	if err != nil {
 		response.Json(
 			resp,
-			core.Respomse{Ok: false, Info: fmt.Sprintf("Can't delete schema '%s'", schemaName)},
+			http_models.NewErrorResponseBody(http.StatusNotFound, "Schema not found"),
 			http.StatusNotFound)
 		return
 	}
 
-	response.Json(
-		resp,
-		core.Respomse{Ok: true, Info: fmt.Sprintf("Schema '%s' was deleted", schemaName)},
-		http.StatusOK)
+	response.Json(resp, "", http.StatusOK)
 }

@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/Enapiuz/SchemaStorage/core"
 	"github.com/Enapiuz/SchemaStorage/helpers/response"
+	"github.com/Enapiuz/SchemaStorage/http_models"
+	"github.com/Enapiuz/SchemaStorage/validators"
 	"github.com/gorilla/mux"
-	"github.com/xeipuuv/gojsonschema"
 	"io/ioutil"
 	"net/http"
 )
@@ -24,70 +24,37 @@ func (h *SchemaValidateHandler) ServeHTTP(resp http.ResponseWriter, req *http.Re
 	if schemaName == "" {
 		response.Json(
 			resp,
-			core.Respomse{Ok: false, Info: "Blank schema name"},
+			http_models.NewErrorResponseBody(http.StatusBadRequest, "Blank schema name"),
 			http.StatusBadRequest)
 		return
 	}
 
-	jsonString, err := ioutil.ReadAll(req.Body)
+	jsonBytes, err := ioutil.ReadAll(req.Body)
 	defer req.Body.Close()
 
 	if err != nil {
 		response.Json(
 			resp,
-			core.Respomse{Ok: false, Info: "Can't read body"},
+			http_models.NewErrorResponseBody(http.StatusBadRequest, "Blank request body"),
 			http.StatusBadRequest)
 		return
 	}
 
-	if string(jsonString) == "" {
+	if len(jsonBytes) == 0 {
 		response.Json(
 			resp,
-			core.Respomse{Ok: false, Info: "Blank request body"},
+			http_models.NewErrorResponseBody(http.StatusBadRequest, "Blank request body"),
 			http.StatusBadRequest)
 		return
 	}
 
-	var schema core.Schema
-	err = h.core.GetCollection(core.SchemaCollection).Find(struct {
-		Name string
-	}{Name: schemaName}).One(&schema)
+	err = validators.ValidateJSONBytesBySchemaName(&jsonBytes, schemaName, h.core.Repo)
 	if err != nil {
 		response.Json(
 			resp,
-			core.Respomse{Ok: false, Info: fmt.Sprintf("Can't find schema '%s'", schemaName)},
-			http.StatusNotFound)
-		return
-	}
-
-	schemaLoader := gojsonschema.NewStringLoader(schema.Data)
-	documentLoader := gojsonschema.NewBytesLoader(jsonString)
-
-	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
-
-	if err != nil {
-		response.Json(
-			resp,
-			core.Respomse{Ok: false, Info: fmt.Sprintf("Unknown error '%s'", err.Error())},
-			http.StatusNotFound)
-		return
-	}
-
-	if result.Valid() {
-		response.Json(
-			resp,
-			core.Respomse{Ok: true, Info: "Document is valid"},
-			http.StatusOK)
-		return
+			http_models.NewErrorResponseBody(http.StatusBadRequest, err.Error()),
+			http.StatusBadRequest)
 	} else {
-		//fmt.Printf("The document is not valid. see errors :\n")
-		//for _, desc := range result.Errors() {
-		//	fmt.Printf("- %s\n", desc)
-		//}
-		response.Json(
-			resp,
-			core.Respomse{Ok: true, Info: "Document is not valid"},
-			http.StatusOK)
-		return
+		response.Json(resp, "", http.StatusOK)
 	}
 }

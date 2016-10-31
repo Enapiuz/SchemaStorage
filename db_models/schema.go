@@ -1,4 +1,4 @@
-package core
+package db_models
 
 type Schema struct {
 	Name string
@@ -7,9 +7,4 @@ type Schema struct {
 
 func NewSchema(name string, data string) *Schema {
 	return &Schema{Name: name, Data: data}
-}
-
-type Respomse struct {
-	Ok   bool
-	Info string
 }

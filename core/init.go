@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"github.com/Enapiuz/SchemaStorage/repository"
 	"gopkg.in/mgo.v2"
 )
 
@@ -11,7 +12,10 @@ func InitializeCore() *Core {
 		panic(err)
 	}
 
-	newCore := NewCore(mongo)
+	database := mongo.DB(SchemaStorage)
+	repo := repository.NewRepository(database, SchemaCollection)
+	newCore := NewCore(repo)
+
 	index := mgo.Index{
 		Key:        []string{"name"},
 		Unique:     true,
@@ -19,7 +23,7 @@ func InitializeCore() *Core {
 		Background: true,
 		Sparse:     true,
 	}
-	err = newCore.GetCollection(SchemaCollection).EnsureIndex(index)
+	err = newCore.Repo.GetCollection(SchemaCollection).EnsureIndex(index)
 
 	if err != nil {
 		panic(fmt.Sprintf("Can't create index on collection %s", SchemaCollection))
