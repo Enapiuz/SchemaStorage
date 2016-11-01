@@ -6,8 +6,8 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-func InitializeCore() *Core {
-	mongo, err := mgo.Dial("localhost:32771")
+func InitializeCore(mongoHost, mongoPort string) *Core {
+	mongo, err := mgo.Dial(fmt.Sprintf("%v:%v", mongoHost, mongoPort))
 	if err != nil {
 		panic(err)
 	}

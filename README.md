@@ -2,8 +2,10 @@
 
 Methods:
 
-`/schema/add/<schemaname>` - adds new schema.
+`/add/<schemaname>` - adds new schema.
 
-`/schema/remove/<schemaname>` - removes schema from storage.
+`/update/<schemaname>` - updates existing schema.
 
-`/schema/validate/<schemaname>` - validates given json with schema from storage.
+`/remove/<schemaname>` - removes schema from storage.
+
+`/validate/<schemaname>` - validates given json with schema from storage.
