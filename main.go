@@ -1,13 +1,13 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/Enapiuz/SchemaStorage/core"
 	"github.com/Enapiuz/SchemaStorage/handlers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"flag"
 )
 
 func main() {

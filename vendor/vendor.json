@@ -1,0 +1,19 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "p/qzxBRYGQTr4JKDAN8JxtSv5iU=",
+			"path": "github.com/jmoiron/sqlx",
+			"revision": "5f97679e23f75f42b265fec8d3bdb1c8de90b79d",
+			"revisionTime": "2016-10-29T03:41:37Z"
+		},
+		{
+			"checksumSHA1": "NJHTyLwheqVk7+syzj9UN7p1dKs=",
+			"path": "github.com/jmoiron/sqlx/reflectx",
+			"revision": "5f97679e23f75f42b265fec8d3bdb1c8de90b79d",
+			"revisionTime": "2016-10-29T03:41:37Z"
+		}
+	],
+	"rootPath": "github.com/Enapiuz/SchemaStorage"
+}
