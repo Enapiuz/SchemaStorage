@@ -34,12 +34,14 @@ func ValidateJSONBytes(schemaBytes *[]byte) error {
 }
 
 func ValidateJSONBytesBySchemaName(jsonBytes *[]byte, schemaName string, repo *repository.Repository) error {
-	trySchema, err := repo.GetSchemaByName(schemaName)
+	trySchemaEntry, err := repo.GetSchemaByName(schemaName)
 	if err != nil {
 		return errors.New("Schema not found")
 	}
 
-	schemaLoader := gojsonschema.NewStringLoader(trySchema.Data)
+	schemaString := trySchemaEntry.Data
+
+	schemaLoader := gojsonschema.NewStringLoader(schemaString)
 	documentLoader := gojsonschema.NewBytesLoader(*jsonBytes)
 
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)

@@ -14,8 +14,8 @@ func main() {
 	var host, port, mongoHost, mongoPort string
 	flag.StringVar(&host, "sh", "127.0.0.1", "Server host")
 	flag.StringVar(&port, "sp", "4298", "Server port")
-	flag.StringVar(&mongoHost, "mh", "127.0.0.1", "MongoDB host")
-	flag.StringVar(&mongoPort, "mp", "27017", "MongoDB port")
+	flag.StringVar(&mongoHost, "mh", "localhost", "MongoDB host")
+	flag.StringVar(&mongoPort, "mp", "32771", "MongoDB port")
 	flag.Parse()
 
 	server := core.InitializeCore(mongoHost, mongoPort)
@@ -26,6 +26,6 @@ func main() {
 	router.Handle("/remove/{schemaname}", handlers.NewSchemaRemoveHandler(server)).Methods("POST")
 	router.Handle("/validate/{schemaname}", handlers.NewSchemaValidateHandler(server)).Methods("POST")
 
-	log.Println(fmt.Sprintf("Starting at %v:%d", host, port))
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%v:%d", host, port), router))
+	log.Println(fmt.Sprintf("Starting at %v:%v", host, port))
+	log.Fatal(http.ListenAndServe(host + ":" + port, router))
 }
